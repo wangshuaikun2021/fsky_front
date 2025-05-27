@@ -1,0 +1,105 @@
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  user: null,
+  token: localStorage.getItem('token'),
+  isAuthenticated: false,
+  loading: true,
+  error: null,
+  partnerInfo: null, // 伴侣信息
+  isPartner: false, // 是否是伴侣
+};
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    loginStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    loginSuccess: (state, action) => {
+      console.log('loginSuccess: received payload', action.payload);
+      const userPayload = action.payload?.user;
+      console.log('loginSuccess: user payload', userPayload);
+
+      state.loading = false;
+      state.isAuthenticated = true;
+
+      if (userPayload) {
+        state.user = userPayload;
+        state.isPartner = userPayload.is_partner || false;
+        state.partnerInfo = userPayload.partner || null;
+      } else {
+        // Fallback if user payload is unexpectedly missing
+        state.user = null;
+        state.isPartner = false;
+        state.partnerInfo = null;
+      }
+
+      state.token = action.payload?.token || null;
+      
+      if (state.token) {
+         localStorage.setItem('token', state.token);
+      } else {
+         localStorage.removeItem('token');
+      }
+
+      console.log('loginSuccess: state after update', { 
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
+        isPartner: state.isPartner,
+        partnerInfo: state.partnerInfo,
+        token: state.token
+      });
+    },
+    loginFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.isAuthenticated = false;
+      state.user = null;
+      state.token = null;
+      state.isPartner = false;
+      state.partnerInfo = null;
+      localStorage.removeItem('token');
+    },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.partnerInfo = null;
+      state.isPartner = false;
+      localStorage.removeItem('token');
+    },
+    updateUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
+      // Update partner info if user object in payload has these fields
+      if (action.payload.is_partner !== undefined) {
+          state.isPartner = action.payload.is_partner;
+      }
+      if (action.payload.partner !== undefined) {
+          state.partnerInfo = action.payload.partner;
+      }
+    },
+    setPartnerInfo: (state, action) => {
+      state.partnerInfo = action.payload;
+      state.isPartner = true; // Setting partner info implies user is now a partner
+    },
+    removePartner: (state) => {
+      state.partnerInfo = null;
+      state.isPartner = false;
+    },
+  },
+});
+
+export const { 
+  loginStart, 
+  loginSuccess, 
+  loginFailure, 
+  logout, 
+  updateUser,
+  setPartnerInfo,
+  removePartner
+} = authSlice.actions;
+
+export default authSlice.reducer; 
