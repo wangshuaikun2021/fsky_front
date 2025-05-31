@@ -4,11 +4,11 @@
 
 ---
 
-#### 1. 用户认证相关接口
+#### 1. 用户认证与个人资料相关接口
 
 **1.1 用户注册**
 
-*   **功能描述:** 创建一个新的用户账号。
+*   **功能描述:** 创建一个新的用户账号并自动生成关联的个人资料。
 *   **HTTP 方法:** `POST`
 *   **URL 路径:** `/register/`
 *   **需要认证:** 否
@@ -17,7 +17,8 @@
     {
       "username": "string", // 用户名 (必需)
       "password": "string", // 密码 (必需)
-      "nickname": "string"  // 昵称 (可选)
+      "nickname": "string",  // 昵称 (可选)
+      "email": "string" // 邮箱 (可选)
     }
     ```
 *   **响应体 (JSON):**
@@ -25,10 +26,23 @@
         ```json
         {
           "token": "string", // 用于后续请求的认证 Token
-          "user": {
-            "id": "integer",      // 用户ID
-            "username": "string", // 用户名
-            "nickname": "string"  // 用户昵称
+          "user": {          // 完整的用户及个人资料信息
+            "id": "integer",
+            "username": "string",
+            "nickname": "string",
+            "avatar": "string or null",
+            "is_partner": "boolean",
+            "partner": { ... } | null, // 伴侣信息或 null
+            "email": "string",
+            "date_joined": "YYYY-MM-DDTHH:MM:ss.sssZ", // 加入时间
+            "last_login": "YYYY-MM-DDTHH:MM:ss.sssZ" | null, // 最后登录时间
+            "profile": { // 嵌套的个人爱好资料
+                "favorite_game": "string",
+                "favorite_food": "string",
+                "favorite_animal": "string",
+                "favorite_sport": "string",
+                "favorite_color": "string"
+            }
           }
         }
         ```
@@ -41,7 +55,7 @@
 
 **1.2 用户登录**
 
-*   **功能描述:** 使用用户名和密码进行登录，获取认证 Token。
+*   **功能描述:** 使用用户名和密码进行登录，获取认证 Token 和完整的用户资料。
 *   **HTTP 方法:** `POST`
 *   **URL 路径:** `/login/`
 *   **需要认证:** 否
@@ -57,10 +71,17 @@
         ```json
         {
           "token": "string", // 用于后续请求的认证 Token
-          "user": {
-            "id": "integer",      // 用户ID
-            "username": "string", // 用户名
-            "nickname": "string"  // 用户昵称
+          "user": {          // 完整的用户及个人资料信息 (同注册接口响应结构)
+            "id": "integer",
+            "username": "string",
+            "nickname": "string",
+            "avatar": "string or null",
+            "is_partner": "boolean",
+            "partner": { ... } | null,
+            "email": "string",
+            "date_joined": "YYYY-MM-DDTHH:MM:ss.sssZ",
+            "last_login": "YYYY-MM-DDTHH:MM:ss.sssZ" | null,
+            "profile": { ... }
           }
         }
         ```
@@ -86,12 +107,130 @@
         }
         ```
 
-**1.4 绑定伴侣**
+**1.4 获取当前用户信息**
+
+*   **功能描述:** 获取当前登录用户的完整资料，包括伴侣信息和个人爱好资料。
+*   **HTTP 方法:** `GET`
+*   **URL 路径:** `/user-info/`
+*   **需要认证:** 是
+*   **请求体:** 无
+*   **响应体 (JSON):**
+    *   **成功 (状态码 200):**
+        ```json
+        {
+          "user": {          // 完整的用户及个人资料信息 (同注册接口响应结构)
+            "id": "integer",
+            "username": "string",
+            "nickname": "string",
+            "avatar": "string or null",
+            "is_partner": "boolean",
+            "partner": { ... } | null,
+            "email": "string",
+            "date_joined": "YYYY-MM-DDTHH:MM:ss.sssZ",
+            "last_login": "YYYY-MM-DDTHH:MM:ss.sssZ" | null,
+            "profile": { // 嵌套的个人爱好资料
+                "favorite_game": "string",
+                "favorite_food": "string",
+                "favorite_animal": "string",
+                "favorite_sport": "string",
+                "favorite_color": "string"
+            }
+          }
+        }
+        ```
+
+**1.5 更新用户信息**
+
+*   **功能描述:** 更新当前登录用户的个人信息，包括昵称、邮箱、头像和爱好资料。支持部分更新。
+*   **HTTP 方法:** `PUT`, `PATCH`
+*   **URL 路径:** `/user/update/`
+*   **需要认证:** 是
+*   **请求体 (支持 application/json 或 multipart/form-data):**
+    *   **使用 application/json (不包含文件上传):**
+        ```json
+        {
+          "nickname": "string" (可选),
+          "email": "string" (可选),
+          "profile": { // 嵌套的个人爱好资料 (可选)
+              "favorite_game": "string" (可选),
+              "favorite_food": "string" (可选),
+              "favorite_animal": "string" (可选),
+              "favorite_sport": "string" (可选),
+              "favorite_color": "string" (可选)
+          }
+        }
+        ```
+    *   **使用 multipart/form-data (包含文件上传):**
+        ```
+        nickname: string (可选)
+        email: string (可选)
+        profile.favorite_game: string (可选)
+        profile.favorite_food: string (可选)
+        profile.favorite_animal: string (可选)
+        profile.favorite_sport: string (可选)
+        profile.favorite_color: string (可选)
+        avatar: file (可选) // 头像文件
+        ```
+*   **响应体 (JSON):**
+    *   **成功 (状态码 200):**
+        ```json
+        {
+          "status": "success",
+          "user": {          // 完整的更新后的用户及个人资料信息 (同获取用户信息接口响应结构)
+            "id": "integer",
+            "username": "string",
+            "nickname": "string",
+            "avatar": "string or null",
+            "is_partner": "boolean",
+            "partner": { ... } | null,
+            "email": "string",
+            "date_joined": "YYYY-MM-DDTHH:MM:ss.sssZ",
+            "last_login": "YYYY-MM-DDTHH:MM:ss.sssZ" | null,
+            "profile": { ... }
+          }
+        }
+        ```
+    *   **失败 (状态码 400):**
+        ```json
+        {
+          "error": "string" // 错误信息
+        }
+        ```
+
+**1.6 修改密码**
+
+*   **功能描述:** 修改当前登录用户的密码。
+*   **HTTP 方法:** `POST`
+*   **URL 路径:** `/user/change-password/`
+*   **需要认证:** 是
+*   **请求体 (JSON):**
+    ```json
+    {
+      "old_password": "string", // 旧密码 (必需)
+      "new_password": "string"  // 新密码 (必需)
+    }
+    ```
+*   **响应体 (JSON):**
+    *   **成功 (状态码 200):**
+        ```json
+        {
+          "status": "success",
+          "message": "string" // 成功提示信息
+        }
+        ```
+    *   **失败 (状态码 400):**
+        ```json
+        {
+          "error": "string" // 错误信息，例如 "旧密码不正确" 或 "请提供旧密码和新密码"
+        }
+        ```
+
+**1.7 绑定伴侣**
 
 *   **功能描述:** 将当前用户与另一个用户账号绑定为伴侣关系。
 *   **HTTP 方法:** `POST`
 *   **URL 路径:** `/bind-partner/`
-*   **需要认证:** 是 (通过 `Authorization: Token <token_value>` 头传递 Token)
+*   **需要认证:** 是
 *   **请求体 (JSON):**
     ```json
     {
@@ -102,13 +241,29 @@
     *   **成功 (状态码 200):**
         ```json
         {
-          "status": "success"
+          "message": "string", // 成功提示信息
+          "partner": { ... } // 伴侣的用户信息 (同获取用户信息接口中的 partner 结构)
         }
         ```
-    *   **失败 (状态码 400):**
+    *   **失败 (状态码 400/404):**
         ```json
         {
-          "error": "string" // 错误信息，例如 "已经绑定伴侣", "对方已经绑定伴侣", "伴侣不存在"
+          "error": "string" // 错误信息
+        }
+        ```
+
+**1.8 解除绑定**
+
+*   **功能描述:** 解除当前用户与伴侣账号的绑定关系。
+*   **HTTP 方法:** `POST`
+*   **URL 路径:** `/unbind-partner/`
+*   **需要认证:** 是
+*   **请求体:** 无
+*   **响应体 (JSON):**
+    *   **成功 (状态码 200):**
+        ```json
+        {
+          "message": "string" // 成功提示信息
         }
         ```
 
@@ -787,7 +942,7 @@
 **注意:**
 
 *   所有需要认证的接口，都需要在 HTTP 请求头中加入 `Authorization: Token <你的token>`。
-*   文件上传（照片、音乐）的接口支持常见的文件格式，具体支持的格式取决于服务器配置。
+*   文件上传（包括照片、音乐文件以及用户头像）的接口支持常见的文件格式，具体支持的格式取决于服务器配置。
 *   所有接口的响应状态码都遵循 RESTful API 的标准：
   * 200: 请求成功
   * 201: 创建成功

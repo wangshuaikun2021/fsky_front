@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Button, Avatar, Dropdown, Space } from 'antd';
+import { Layout, Menu, Avatar, Dropdown, Space } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,7 +9,6 @@ import {
   CustomerServiceOutlined,
   SmileOutlined,
   CalendarOutlined,
-  LogoutOutlined,
   UserOutlined,
   HeartOutlined,
 } from '@ant-design/icons';
@@ -32,61 +31,36 @@ const MainLayout = () => {
       navigate('/login');
     } catch (error) {
       console.error('登出失败:', error);
+      // Optionally show an error message to the user
+      // message.error(error.message || '登出失败');
     }
   };
 
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="profile">
-        <Link to="/profile">个人资料</Link>
-      </Menu.Item>
-      <Menu.Item key="partner">
-        <Link to="/partner">伴侣绑定</Link>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="logout" onClick={handleLogout}>
-        退出登录
-      </Menu.Item>
-    </Menu>
-  );
+  // Update userMenu structure for Ant Design v5 Dropdown
+  const userMenuItems = [
+    {
+      key: 'profile',
+      label: <Link to="/profile">个人资料</Link>,
+    },
+    {
+      key: 'partner',
+      label: <Link to="/partner">伴侣绑定</Link>,
+    },
+    { type: 'divider' },
+    {
+      key: 'logout',
+      label: '退出登录',
+      onClick: handleLogout,
+    },
+  ];
 
   const menuItems = [
-    {
-      key: 'dashboard',
-      icon: <HomeOutlined />,
-      label: '首页',
-      onClick: () => navigate('/dashboard'),
-    },
-    {
-      key: 'diary',
-      icon: <BookOutlined />,
-      label: '日记',
-      onClick: () => navigate('/diary/list'),
-    },
-    {
-      key: 'photo',
-      icon: <PictureOutlined />,
-      label: '照片墙',
-      onClick: () => navigate('/photo'),
-    },
-    {
-      key: 'music',
-      icon: <CustomerServiceOutlined />,
-      label: '音乐收藏',
-      onClick: () => navigate('/music'),
-    },
-    {
-      key: 'mood',
-      icon: <SmileOutlined />,
-      label: '心情记录',
-      onClick: () => navigate('/mood'),
-    },
-    {
-      key: 'anniversary',
-      icon: <CalendarOutlined />,
-      label: '纪念日',
-      onClick: () => navigate('/anniversary'),
-    },
+    { key: 'dashboard', icon: <HomeOutlined />, label: '首页', onClick: () => navigate('/dashboard') },
+    { key: 'diary', icon: <BookOutlined />, label: '日记', onClick: () => navigate('/diary/list') },
+    { key: 'photo', icon: <PictureOutlined />, label: '照片墙', onClick: () => navigate('/photo') },
+    { key: 'music', icon: <CustomerServiceOutlined />, label: '音乐收藏', onClick: () => navigate('/music') },
+    { key: 'mood', icon: <SmileOutlined />, label: '心情记录', onClick: () => navigate('/mood') },
+    { key: 'anniversary', icon: <CalendarOutlined />, label: '纪念日', onClick: () => navigate('/anniversary') },
   ];
 
   return (
@@ -100,16 +74,16 @@ const MainLayout = () => {
         boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
       }}>
         <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1890ff' }}>
-          <HeartOutlined /> 我们的小窝
+          <HeartOutlined /> 浪漫小窝~~~~~
         </div>
-        <Dropdown overlay={userMenu} placement="bottomRight">
-          <Space style={{ color: 'white', cursor: 'pointer' }}>
-            <Avatar icon={<UserOutlined />} />
-            <span>{user?.nickname || user?.username}</span>
+        {/* Use menu prop instead of overlay */}
+        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+          <Space style={{ color: '#222', cursor: 'pointer', fontSize: 16 }}>
+            <Avatar src={user?.avatar} icon={<UserOutlined />} />
+            <span style={{ fontWeight: 500, marginLeft: 8 }}>{user?.nickname || user?.username}</span>
+            <span style={{ fontSize: 16, color: '#ff4d4f', margin: '0 10px' }}>❤️</span>
             {partnerInfo && (
-              <span style={{ marginLeft: '8px' }}>
-                ❤️ {partnerInfo.nickname || partnerInfo.username}
-              </span>
+              <span style={{ fontWeight: 500 }}>{partnerInfo.nickname || partnerInfo.username}</span>
             )}
           </Space>
         </Dropdown>

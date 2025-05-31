@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+// Import baseURL from axios config
+import axiosInstance from '../../api/axios';
+const baseURL = axiosInstance.defaults.baseURL;
 
 const initialState = {
   user: null,
@@ -27,6 +30,15 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
 
       if (userPayload) {
+        // Construct full avatar URL if it's a relative path
+        if (userPayload.avatar && typeof userPayload.avatar === 'string' && userPayload.avatar.startsWith('/')) {
+           userPayload.avatar = `${baseURL}${userPayload.avatar}`;
+        }
+        // Ensure partner avatar is also a full URL if it exists
+        if (userPayload.partner?.avatar && typeof userPayload.partner.avatar === 'string' && userPayload.partner.avatar.startsWith('/')) {
+           userPayload.partner.avatar = `${baseURL}${userPayload.partner.avatar}`;
+        }
+
         state.user = userPayload;
         state.isPartner = userPayload.is_partner || false;
         state.partnerInfo = userPayload.partner || null;
@@ -72,13 +84,27 @@ const authSlice = createSlice({
       localStorage.removeItem('token');
     },
     updateUser: (state, action) => {
-      state.user = { ...state.user, ...action.payload };
-      // Update partner info if user object in payload has these fields
-      if (action.payload.is_partner !== undefined) {
-          state.isPartner = action.payload.is_partner;
+      // Create a mutable copy to modify avatar URL
+      const updatedUser = { ...action.payload };
+
+      // Construct full avatar URL if it's a relative path in the payload
+      if (updatedUser.avatar && typeof updatedUser.avatar === 'string' && updatedUser.avatar.startsWith('/')) {
+         updatedUser.avatar = `${baseURL}${updatedUser.avatar}`;
       }
-      if (action.payload.partner !== undefined) {
-          state.partnerInfo = action.payload.partner;
+      // Ensure partner avatar in updated user is also a full URL if it exists
+      if (updatedUser.partner?.avatar && typeof updatedUser.partner.avatar === 'string' && updatedUser.partner.avatar.startsWith('/')) {
+         updatedUser.partner.avatar = `${baseURL}${updatedUser.partner.avatar}`;
+      }
+
+      // Ensure the user object reference changes by creating a new object
+      state.user = { ...state.user, ...updatedUser };
+
+      // Update partner info if user object in payload has these fields
+      if (updatedUser.is_partner !== undefined) {
+          state.isPartner = updatedUser.is_partner;
+      }
+      if (updatedUser.partner !== undefined) {
+          state.partnerInfo = updatedUser.partner;
       }
     },
     setPartnerInfo: (state, action) => {

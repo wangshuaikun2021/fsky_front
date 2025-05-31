@@ -5,11 +5,13 @@ import Register from '../pages/auth/Register';
 import Dashboard from '../pages/dashboard/Dashboard';
 import DiaryList from '../pages/diary/DiaryList';
 import DiaryEdit from '../pages/diary/DiaryEdit';
+import DiaryDetail from '../pages/diary/DiaryDetail';
 import PhotoWall from '../pages/photo/PhotoWall';
 import MusicList from '../pages/music/MusicList';
 import MoodRecord from '../pages/mood/MoodRecord';
 import Anniversary from '../pages/anniversary/Anniversary';
 import BindPartner from '../pages/partner/BindPartner';
+import Profile from '../pages/profile/Profile';
 import PrivateRoute from '../components/PrivateRoute';
 
 const router = createBrowserRouter([
@@ -38,17 +40,24 @@ const router = createBrowserRouter([
         element: <BindPartner />,
       },
       {
-        path: 'diary',
-        children: [
-          {
-            path: 'list',
-            element: <DiaryList />,
-          },
-          {
-            path: 'edit/:id?',
-            element: <DiaryEdit />,
-          },
-        ],
+        path: 'profile',
+        element: <Profile />,
+      },
+      {
+        path: 'diary/list',
+        element: <DiaryList />,
+      },
+      {
+        path: 'diary/edit',
+        element: <DiaryEdit />,
+      },
+      {
+        path: 'diary/edit/:id',
+        element: <DiaryEdit />,
+      },
+      {
+        path: 'diary/detail/:id',
+        element: <DiaryDetail />,
       },
       {
         path: 'photo',

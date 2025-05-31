@@ -1,0 +1,433 @@
+.mainLayoutSimple {
+  min-height: calc(100vh - 64px);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.simpleCard {
+  max-width: 1200px;
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+  padding: 36px 40px 24px 40px;
+  margin: 40px auto;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+  position: relative;
+}
+
+.titleLabel {
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+}
+.titleInput {
+  font-size: 22px !important;
+  font-weight: 500;
+  border: none;
+  border-bottom: 2px solid #eee;
+  border-radius: 0;
+  box-shadow: none !important;
+  padding: 10px 0;
+  margin-bottom: -500px;
+}
+
+.mdEditorWrap,
+.tiptapContent,
+.tiptapContent:focus,
+.ProseMirror,
+.ProseMirror-focused {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #fff;
+}
+
+.mdPreviewWrap {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  min-height: 300px;
+}
+
+.mdPreviewWrap pre {
+  background: #f6f8fa;
+  border-radius: 6px;
+  padding: 16px;
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+  font-size: 15px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.mdPreviewWrap code {
+  background: none;
+  color: #222;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.mdPreviewWrap ul,
+.mdPreviewWrap ol {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+.mdPreviewWrap li {
+  margin: 0.5em 0;
+  padding-left: 0;
+}
+
+.tags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actionBar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+:global(.ql-editor img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+:global(.ql-editor video) {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+:global(.ql-editor blockquote) {
+  border-left: 4px solid #e8e8e8;
+  margin: 1em 0;
+  padding-left: 16px;
+  color: #666;
+}
+
+:global(.ql-editor h1),
+:global(.ql-editor h2),
+:global(.ql-editor h3),
+:global(.ql-editor h4),
+:global(.ql-editor h5),
+:global(.ql-editor h6) {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+:global(.ql-editor ul),
+:global(.ql-editor ol) {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+
+:global(.ql-editor li) {
+  margin: 0.5em 0;
+}
+
+:global(.ql-editor a) {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+:global(.ql-editor a:hover) {
+  text-decoration: underline;
+}
+
+.cardMd {
+  width: 1100px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  padding: 32px 32px 16px 32px;
+  margin-bottom: 24px;
+}
+
+.editorWrap {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: #fafbfc;
+  margin-bottom: 24px;
+}
+
+.editor {
+  min-height: 400px;
+  font-size: 16px;
+  font-family: '微软雅黑', 'Arial', 'Consolas', 'monospace';
+}
+
+.editor :global(.ql-toolbar) {
+  border-radius: 6px 6px 0 0;
+  background: #f7f8fa;
+  border-bottom: 1px solid #eee;
+}
+
+.editor :global(.ql-container) {
+  min-height: 350px;
+  font-size: 16px;
+  font-family: inherit;
+  background: #fff;
+  border-radius: 0 0 6px 6px;
+}
+
+.editor :global(.ql-editor) {
+  padding: 20px;
+  min-height: 300px;
+}
+
+.editor :global(.ql-editor pre.ql-syntax),
+.editor :global(.ql-editor pre) {
+  background-color: #282c34;
+  color: #fff;
+  border-radius: 4px;
+  padding: 16px;
+  font-family: 'Fira Mono', 'Consolas', 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 15px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 1em 0;
+  overflow-x: auto;
+}
+
+.tiptapContent pre {
+  background: #f6f8fa !important;
+  color: #24292e !important;
+  border-radius: 6px;
+  padding: 16px;
+  font-family: 'Fira Mono', 'Consolas', 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 1em 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.tiptapContent code {
+  background: #f6f8fa;
+  color: #c7254e;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'Fira Mono', 'Consolas', 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 15px;
+}
+
+.tiptapContent pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.tiptapContent p,
+.tiptapContent ul,
+.tiptapContent ol,
+.tiptapContent li,
+.tiptapContent h1,
+.tiptapContent h2,
+.tiptapContent h3,
+.tiptapContent h4,
+.tiptapContent h5,
+.tiptapContent h6 {
+  line-height: 1.8;
+  margin: 0.5em 0;
+  padding: 0;
+}
+
+.tiptapContent ul,
+.tiptapContent ol {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+
+.tiptapContent li {
+  margin: 0.5em 0;
+  padding-left: 0;
+}
+
+.tiptapContent h1,
+.tiptapContent h2,
+.tiptapContent h3,
+.tiptapContent h4,
+.tiptapContent h5,
+.tiptapContent h6 {
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.tiptapEditor {
+  width: 100%;
+  min-height: 300px;
+  font-size: 16px;
+  font-family: '微软雅黑', 'Arial', 'Consolas', 'monospace';
+  background: #fff;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.tiptapEditor img {
+  max-width: 100%;
+  min-width: 50px;
+  min-height: 30px;
+  display: block;
+  height: auto;
+}
+
+/* 工具栏样式 */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 24px 8px 24px;
+  margin-bottom: 0;
+  background: transparent;
+  border-radius: 12px;
+  max-width: 100%;
+  width: 100%;
+  border: none;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+.toolbar-btn {
+  background: none;
+  border: none;
+  outline: none;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 18px;
+  color: #888;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.toolbar-btn.active,
+.toolbar-btn:hover {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+.toolbar-divider {
+  display: inline-block;
+  width: 1px;
+  height: 22px;
+  background: #eee;
+  margin: 0 8px;
+  vertical-align: middle;
+}
+
+/* 代码高亮token，github风格 */
+.hljs {
+  color: #24292e;
+  background: transparent;
+}
+.hljs-keyword { color: #d73a49; }
+.hljs-string { color: #032f62; }
+.hljs-comment { color: #6a737d; font-style: italic; }
+.hljs-number { color: #005cc5; }
+.hljs-title, .hljs-section { color: #6f42c1; }
+.hljs-built_in { color: #6f42c1; }
+.hljs-literal { color: #005cc5; }
+.hljs-type { color: #005cc5; }
+.hljs-meta { color: #b31d28; }
+.hljs-symbol { color: #005cc5; }
+.hljs-attribute { color: #6f42c1; }
+.hljs-bullet { color: #005cc5; }
+.hljs-addition { color: #22863a; }
+.hljs-deletion { color: #b31d28; }
+.hljs-variable { color: #e36209; }
+.hljs-params { color: #24292e; }
+.hljs-function { color: #6f42c1; }
+.hljs-punctuation { color: #24292e; }
+.hljs-operator { color: #d73a49; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+
+input,
+textarea,
+.ant-input,
+.ant-input-focused,
+.ant-form-item-control-input,
+.ProseMirror,
+.ProseMirror-focused {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: #fff;
+}
+
+.toolbarWrap {
+  width: 1100px;
+  margin: 0 auto -30px auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+  background: #f7f8fa;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mdEditorWrap {
+  background: #fff;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 28px;
+  width: 100%;
+  min-height: calc(100vh - 450px);
+  box-sizing: border-box;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px;
+}
+
+.tiptapContent,
+.tiptapContent:focus,
+.tiptapContent:active,
+.tiptapContent .ProseMirror,
+.tiptapContent .ProseMirror:focus,
+.tiptapContent .ProseMirror-focused,
+.tiptapContent .ProseMirror:active {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body .ProseMirror,
+body .ProseMirror:focus,
+body .ProseMirror-focused,
+body .ProseMirror:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.tiptapContent .ProseMirror,
+.tiptapContent .ProseMirror-focused,
+.tiptapContent .ProseMirror:focus,
+.tiptapContent .ProseMirror:focus-within,
+.tiptapContent .ProseMirror:focus-visible,
+.tiptapContent .ProseMirror:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+[class*="ProseMirror"] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+} 

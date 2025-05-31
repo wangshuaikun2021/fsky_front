@@ -53,7 +53,7 @@ const AuthInitializer = ({ children }) => {
         alignItems: 'center', 
         height: '100vh' 
       }}>
-        <Spin size="large" tip="加载认证信息..." />
+        <Spin size="large" />
       </div>
     );
   }

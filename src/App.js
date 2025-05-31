@@ -13,7 +13,7 @@ function App() {
     <Provider store={store}>
       <ConfigProvider locale={zhCN}>
         <AuthInitializer>
-          <RouterProvider router={router} />
+          <RouterProvider router={router} future={{ v7_startTransition: true }} />
         </AuthInitializer>
       </ConfigProvider>
     </Provider>
