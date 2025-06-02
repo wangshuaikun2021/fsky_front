@@ -7,6 +7,7 @@ const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
   const location = useLocation();
 
+  // 临时去掉loading界面，方便调试
   if (loading) {
     return (
       <div style={{ 

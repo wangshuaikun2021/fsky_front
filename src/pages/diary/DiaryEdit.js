@@ -612,7 +612,7 @@ const DiaryEdit = () => {
               required={false}
               colon={false}
               style={{ marginBottom: 0 }}
-            >
+          >
               <div className={styles.mdEditorWrap} style={{ maxWidth: 800, margin: '0 auto' }}>
               <EditorContent editor={editor} className={styles.tiptapContent} />
               </div>

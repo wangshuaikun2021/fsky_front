@@ -7,10 +7,12 @@ const initialState = {
   user: null,
   token: localStorage.getItem('token'),
   isAuthenticated: false,
-  loading: true,
+  loading: false,
   error: null,
   partnerInfo: null, // 伴侣信息
   isPartner: false, // 是否是伴侣
+  loveSettings: null, // 恋爱设置（全局状态）
+  loveSettingsLoading: false, // 恋爱设置加载状态
 };
 
 const authSlice = createSlice({
@@ -81,6 +83,8 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.partnerInfo = null;
       state.isPartner = false;
+      state.loveSettings = null;
+      state.loveSettingsLoading = false;
       localStorage.removeItem('token');
     },
     updateUser: (state, action) => {
@@ -115,6 +119,17 @@ const authSlice = createSlice({
       state.partnerInfo = null;
       state.isPartner = false;
     },
+    updateLoveSettings: (state, action) => {
+      state.loveSettings = action.payload;
+      state.loveSettingsLoading = false;
+    },
+    setLoveSettingsLoading: (state, action) => {
+      state.loveSettingsLoading = action.payload;
+    },
+    clearLoveSettings: (state) => {
+      state.loveSettings = null;
+      state.loveSettingsLoading = false;
+    },
   },
 });
 
@@ -125,7 +140,10 @@ export const {
   logout, 
   updateUser,
   setPartnerInfo,
-  removePartner
+  removePartner,
+  updateLoveSettings,
+  setLoveSettingsLoading,
+  clearLoveSettings
 } = authSlice.actions;
 
 export default authSlice.reducer; 

@@ -26,16 +26,16 @@ const DiaryList = () => {
   const fetchData = async (params = {}) => {
     setLoading(true);
     setError(null);
-    try {
+      try {
       const data = await getDiaries({ page, page_size: pageSize, search, ...params });
       setDiaryData(data);
-    } catch (err) {
+      } catch (err) {
       setError(err.message);
-      message.error(err.message);
+        message.error(err.message);
     } finally {
       setLoading(false);
-    }
-  };
+      }
+    };
 
   // 首次和依赖变化时拉取
   React.useEffect(() => {
@@ -92,18 +92,18 @@ const DiaryList = () => {
         <div style={{ color: 'red', textAlign: 'center', padding: 40 }}>{error}</div>
       ) : (
         <>
-          <List
+      <List
             itemLayout="vertical"
             dataSource={diaryData.diaries}
             locale={{ emptyText: '暂无日记' }}
-            renderItem={item => (
-              <List.Item
+        renderItem={item => (
+          <List.Item
                 key={item.id}
                 style={{ padding: '18px 0', borderBottom: '1px solid #f0f0f0' }}
-                actions={[
+            actions={[
                   <Button type="link" onClick={() => navigate(`/diary/detail/${item.id}`)} key="view">查看</Button>,
                   user && item.author === user.username && (
-                    <Button type="link" onClick={() => navigate(`/diary/edit/${item.id}`)} key="edit">编辑</Button>
+              <Button type="link" onClick={() => navigate(`/diary/edit/${item.id}`)} key="edit">编辑</Button>
                   ),
                   user && item.author === user.username && (
                     <Popconfirm title="确定要删除这篇日记吗？" onConfirm={() => handleDelete(item.id)} okText="删除" cancelText="取消">
@@ -111,20 +111,20 @@ const DiaryList = () => {
                     </Popconfirm>
                   )
                 ].filter(Boolean)}
-              >
-                <List.Item.Meta
+          >
+            <List.Item.Meta
                   title={<span style={{ fontWeight: 600, fontSize: 18, cursor: 'pointer' }} onClick={() => navigate(`/diary/detail/${item.id}`)}>{item.title}</span>}
-                  description={
+              description={
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
                       <Text type="secondary">{item.created_at ? moment(item.created_at).format('YYYY-MM-DD HH:mm') : ''}</Text>
                       {item.tags && item.tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
                     </div>
-                  }
-                />
+              }
+            />
                 {item.summary && <div style={{ color: '#666', marginTop: 4, fontSize: 15 }}>{item.summary}</div>}
-              </List.Item>
-            )}
-          />
+          </List.Item>
+        )}
+      />
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
             <Pagination
               current={page}

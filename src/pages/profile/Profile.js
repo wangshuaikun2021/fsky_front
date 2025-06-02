@@ -4,20 +4,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { UserOutlined, EnvironmentOutlined, LinkOutlined, CalendarOutlined, HeartOutlined, UploadOutlined, MailOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { ThunderboltOutlined, AppleOutlined, SmileOutlined, TrophyOutlined, StarOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { updateUser } from '../../redux/slices/authSlice';
-import { updateUserInfo, changePassword } from '../../api/auth'; // Import API calls
+import { updateUser, updateLoveSettings, setLoveSettingsLoading } from '../../redux/slices/authSlice';
+import { updateUserInfo, changePassword } from '../../api/auth';
+import { updateLoveSettingsPut } from '../../api/loveSettings';
+import dayjs from 'dayjs';
+import { DatePicker } from 'antd';
 
 const { Title, Text } = Typography;
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { user, partnerInfo, loading } = useSelector((state) => state.auth);
+  const { user, partnerInfo, loading, loveSettings } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
   const [profileForm] = Form.useForm(); // Renamed form
   const [passwordForm] = Form.useForm(); // Added password form
   const [uploading, setUploading] = useState(false);
   const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false); // Password modal state
   const [passwordLoading, setPasswordLoading] = useState(false); // Password change loading state
+  const [settingsModal, setSettingsModal] = useState(false);
+  const [settingsForm] = Form.useForm();
 
   // When user data is loaded or updated, populate the profile form
   useEffect(() => {
@@ -35,10 +40,15 @@ const Profile = () => {
     }
   }, [user, profileForm]);
 
-  // Effect to log profile data changes
+  // 监听弹窗打开时同步表单内容
   useEffect(() => {
-    console.log('Profile component: user.profile state changed', user?.profile);
-  }, [user?.profile]); // Depend on user.profile
+    if (settingsModal && loveSettings) {
+      settingsForm.setFieldsValue({
+        couple_name: loveSettings.couple_name || '',
+        start_date: loveSettings.start_date ? dayjs(loveSettings.start_date) : null,
+      });
+    }
+  }, [settingsModal, loveSettings]);
 
   if (loading && !user) { // Show loading only on initial load if user is null
     return (
@@ -152,6 +162,32 @@ const Profile = () => {
     } finally {
       setPasswordLoading(false);
     }
+  };
+
+  // 保存情侣空间设置
+  const handleSaveSettings = async (values) => {
+    try {
+      const saveData = {
+        couple_name: values.couple_name,
+        start_date: values.start_date ? values.start_date.format('YYYY-MM-DD') : '',
+      };
+      await updateLoveSettingsPut(saveData);
+      message.success('保存成功！');
+      setSettingsModal(false);
+      // 更新Redux全局状态
+      dispatch(updateLoveSettings({
+        couple_name: values.couple_name,
+        start_date: values.start_date ? values.start_date.format('YYYY-MM-DD') : '',
+        anniversary_dates: loveSettings?.anniversary_dates || {},
+      }));
+    } catch {
+      message.error('保存失败');
+    }
+  };
+
+  // 打开情侣空间设置弹窗
+  const handleOpenSettingsModal = () => {
+    setSettingsModal(true);
   };
 
   return (
@@ -273,11 +309,51 @@ const Profile = () => {
                 <Space>
                   <HeartOutlined style={{ color: '#ff4d4f' }} />
                   <Text>已绑定伴侣: {partnerInfo.nickname || partnerInfo.username}</Text>
+                  <Button type="link" size="small" onClick={handleOpenSettingsModal}>情侣空间设置</Button>
                 </Space>
              ) : (
                 <Text type="secondary">暂未绑定伴侣。</Text>
              )}
            </Card>
+
+           {/* 情侣空间设置弹窗 */}
+           <Modal
+             title="编辑情侣空间设置"
+             open={settingsModal}
+             onCancel={() => {
+               setSettingsModal(false);
+               settingsForm.resetFields();
+             }}
+             onOk={() => settingsForm.submit()}
+             okText="保存"
+           >
+             <Form
+               form={settingsForm}
+               layout="vertical"
+               onFinish={handleSaveSettings}
+             >
+               <Form.Item 
+                 name="couple_name" 
+                 label="情侣名称" 
+                 rules={[{ required: true, message: '请输入情侣名称' }]}
+               >
+                 <Input 
+                   maxLength={20} 
+                   placeholder="请输入情侣名称"
+                 />
+               </Form.Item>
+               <Form.Item 
+                 name="start_date" 
+                 label="在一起的日期" 
+                 rules={[{ required: true, message: '请选择日期' }]}
+               >
+                 <DatePicker 
+                   style={{ width: '100%' }} 
+                   placeholder="请选择日期"
+                 />
+               </Form.Item>
+             </Form>
+           </Modal>
 
            {/* Profile Details Card */}
            <Card title="个人爱好" bordered={false} style={{ marginTop: '24px' }}>

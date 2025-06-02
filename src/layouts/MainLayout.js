@@ -25,14 +25,15 @@ const MainLayout = () => {
   const { user, partnerInfo } = useSelector((state) => state.auth);
 
   const handleLogout = async () => {
+    // 1. 立即清除本地登录状态并跳转
+    dispatch(logout());
+    navigate('/login');
+    // 2. 异步通知后端（不影响前端流程）
     try {
       await logoutApi();
-      dispatch(logout());
-      navigate('/login');
     } catch (error) {
       console.error('登出失败:', error);
-      // Optionally show an error message to the user
-      // message.error(error.message || '登出失败');
+      // 可以选择提示用户，但不影响前端跳转
     }
   };
 
@@ -80,10 +81,10 @@ const MainLayout = () => {
         <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
           <Space style={{ color: '#222', cursor: 'pointer', fontSize: 16 }}>
             <Avatar src={user?.avatar} icon={<UserOutlined />} />
-            <span style={{ fontWeight: 500, marginLeft: 8 }}>{user?.nickname || user?.username}</span>
+            <span style={{ fontWeight: 500, marginLeft: 8 }}>{user?.username || user?.nickname}</span>
             <span style={{ fontSize: 16, color: '#ff4d4f', margin: '0 10px' }}>❤️</span>
             {partnerInfo && (
-              <span style={{ fontWeight: 500 }}>{partnerInfo.nickname || partnerInfo.username}</span>
+              <span style={{ fontWeight: 500 }}>{partnerInfo.username || partnerInfo.nicename}</span>
             )}
           </Space>
         </Dropdown>

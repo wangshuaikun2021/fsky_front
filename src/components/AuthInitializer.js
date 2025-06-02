@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess, loginFailure } from '../redux/slices/authSlice';
+import { loginSuccess, loginFailure, updateLoveSettings, setLoveSettingsLoading } from '../redux/slices/authSlice';
 import axiosInstance from '../api/axios';
+import { getLoveSettings } from '../api/loveSettings';
 import { Spin } from 'antd';
 
 const AuthInitializer = ({ children }) => {
@@ -13,21 +14,28 @@ const AuthInitializer = ({ children }) => {
     const initializeAuth = async () => {
       if (token) {
         try {
-          console.log('AuthInitializer: Fetching user info with token...', token);
           const response = await axiosInstance.get('/user-info/');
-          console.log('AuthInitializer: Received user info response data', response);
           
           const payload = {
             user: response.user,
             token: token
           };
           
-          console.log('AuthInitializer: Dispatching loginSuccess with payload', payload);
           dispatch(loginSuccess(payload));
-          console.log('AuthInitializer: loginSuccess dispatched.');
+          
+          // 获取用户信息成功后，也获取恋爱设置
+          try {
+            dispatch(setLoveSettingsLoading(true));
+            const loveSettingsRes = await getLoveSettings();
+            dispatch(updateLoveSettings(loveSettingsRes));
+          } catch (loveError) {
+            console.error('Failed to fetch love settings:', loveError);
+            // 获取恋爱设置失败不影响整体登录流程
+            dispatch(setLoveSettingsLoading(false));
+          }
           
         } catch (error) {
-          console.error('AuthInitializer: Failed to restore session:', error);
+          console.error('Failed to restore session:', error);
           localStorage.removeItem('token');
           dispatch(loginFailure(error.error || 'Failed to restore session'));
         } finally {

@@ -3,8 +3,9 @@ import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure } from '../../redux/slices/authSlice';
+import { loginStart, loginSuccess, loginFailure, updateLoveSettings, setLoveSettingsLoading } from '../../redux/slices/authSlice';
 import { login } from '../../api/auth';
+import { getLoveSettings } from '../../api/loveSettings';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +18,18 @@ const Login = () => {
       dispatch(loginStart());
       const response = await login(values.username, values.password);
       dispatch(loginSuccess(response));
+      
+      // 登录成功后获取恋爱设置
+      try {
+        dispatch(setLoveSettingsLoading(true));
+        const loveSettingsRes = await getLoveSettings();
+        console.log('Love settings fetched after login:', loveSettingsRes);
+        dispatch(updateLoveSettings(loveSettingsRes));
+      } catch (loveError) {
+        console.error('Failed to fetch love settings after login:', loveError);
+        dispatch(setLoveSettingsLoading(false));
+      }
+      
       message.success('登录成功');
       const from = location.state?.from?.pathname || '/dashboard';
       navigate(from, { replace: true });
