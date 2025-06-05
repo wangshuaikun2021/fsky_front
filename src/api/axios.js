@@ -6,7 +6,6 @@ const axiosInstance = axios.create({
   baseURL,
   timeout: 5000,
   headers: {
-    'Content-Type': 'application/json',
   },
   withCredentials: true, // 允许跨域请求携带凭证
 });

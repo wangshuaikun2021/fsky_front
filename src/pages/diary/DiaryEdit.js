@@ -251,9 +251,7 @@ const DiaryEdit = () => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const res = await axiosInstance.post('/upload/image/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const res = await axiosInstance.post('/upload/image/', formData);
       const url = res.url;
       editor.chain().focus().setImage({
         src: url,
@@ -551,9 +549,7 @@ const DiaryEdit = () => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const res = await axiosInstance.post('/upload/video/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const res = await axiosInstance.post('/upload/video/', formData);
       const url = res.url;
       editor.chain().focus().setVideo({ src: url }).run();
       // 如 setVideo 不生效可用：

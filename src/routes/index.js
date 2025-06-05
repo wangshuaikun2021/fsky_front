@@ -13,6 +13,7 @@ import Anniversary from '../pages/anniversary/Anniversary';
 import BindPartner from '../pages/partner/BindPartner';
 import Profile from '../pages/profile/Profile';
 import PrivateRoute from '../components/PrivateRoute';
+import Music from '../pages/music/Music';
 
 const router = createBrowserRouter([
   {
@@ -64,16 +65,16 @@ const router = createBrowserRouter([
         element: <PhotoWall />,
       },
       {
-        path: 'music',
-        element: <MusicList />,
-      },
-      {
         path: 'mood',
         element: <MoodRecord />,
       },
       {
         path: 'anniversary',
         element: <Anniversary />,
+      },
+      {
+        path: 'music',
+        element: <Music />,
       },
     ],
   },

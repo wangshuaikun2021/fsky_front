@@ -90,11 +90,7 @@ export const updateUserInfo = async (userData) => {
     //     console.log(`${key}: ${value}`);
     // }
 
-    const response = await axiosInstance.patch('/user/update/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await axiosInstance.patch('/user/update/', formData);
     return response;
   } catch (error) {
     console.error('Update user info error:', error);

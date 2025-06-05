@@ -7,6 +7,7 @@ import router from './routes';
 import { store } from './redux/store';
 import AuthInitializer from './components/AuthInitializer';
 import './styles/global.css';
+console.log('App.js已加载');
 
 function App() {
   return (
